@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Todos App</title>
+        <style>
+            .done {
+                text-decoration: line-through;
+            }
+
+            .priority {
+                color: red;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="app">
+            <h1>My Todos</h1>
+            <input type="text" placeholder="Type your todo here." v-model="todoTitle" v-on:keypress.enter="addTodo"
+                v-bind:maxlength="maxLength">
+            <p> {{ charCount }} / {{ maxLength }} </p>
+            <h4>Typing: {{ todoTitle }}</h4>
+            <ul v-for="(todo,index) in todoList">
+                <li>
+                    <span v-bind:class="{ done: todo.isDone, priority: todo.isPriority }">{{ index+1 }}.
+                        {{ todo.title }}</span>
+                    <button v-on:click="deleteTodo(index)"> X </button>
+                    <button v-on:click="completeTodo(index)"> Done </button>
+                    <button v-on:click="changeColour(index)"> High Priority </button>
+                </li>
+            </ul>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+        <script>
+            var vm = new Vue({
+                el: '#app',
+                data: {
+                    todoTitle: "",
+                    todoList: [{
+                            title: 'Buy Grocery',
+                            isDone: false,
+                            isPriority: false
+                        },
+                        {
+                            title: 'Do Homework',
+                            isDone: false,
+                            isPriority: false
+                        }
+                    ],
+                    maxLength: 10
+                },
+                computed: {
+                    charCount: function () {
+                        return this.todoTitle.length
+                    },
+                },
+                methods: {
+                    addTodo: function () {
+                        this.todoList.push({
+                            title: this.todoTitle,
+                            isDone: false,
+                            isPriority: false
+                        })
+                        this.todoTitle = ""
+                    },
+
+                    deleteTodo: function (index) {
+                        this.todoList.splice(index, 1)
+                    },
+
+                    completeTodo: function (index) {
+                        this.todoList[index].isDone = !this.todoList[index].isDone
+                    },
+
+                    changeColour: function (index) {
+                        this.todoList[index].isPriority = !this.todoList[index].isPriority
+                    },
+                }
+            });
+        </script>
+
+    </body>
+
+</html>
